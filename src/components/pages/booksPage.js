@@ -2,15 +2,14 @@ import React, {Component} from 'react';
 import ErrorMessage from '../error';
 import gotService from '../../services/gotService';
 import ItemList from '../itemList';
-import ItemDetails, {Field} from '../itemDetails';
-import RowBlock from '../rowBlock'
+import {withRouter} from 'react-router-dom'
 
-export default class BooksPage extends Component {
+
+class BooksPage extends Component {
 
     gotService = new gotService();
 
     state = {
-        selectedBook: 1,
         error: false
     }
 
@@ -30,18 +29,12 @@ export default class BooksPage extends Component {
 
      
 
-        const itemDetails = (
-            <ItemDetails 
-            itemId = {this.state.selectedBook}
-            getItem ={this.gotService.getBook}>
-                <Field field='numberOfPages' label='Number of pages'/>
-                <Field field='publisher' label='Publisher'/>
-                <Field field='released' label='Released'/>
-            </ItemDetails>
-        )
+        
         return(
             <ItemList 
-            onItemSelected={itenId}
+            onItemSelected={(itemId) =>{
+                this.props.history.push(itemId)
+            }}
             getData={this.gotService.getAllBooks}  //передаем в пропсе функцию которая делает запрос  
             renderItem={({name}) => name}/> //мы передаем функцию которая берет объект item и будет из него возвращать item.name   0
         )
@@ -49,3 +42,5 @@ export default class BooksPage extends Component {
         
     }
 }
+
+export default withRouter(BooksPage);
